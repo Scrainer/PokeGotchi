@@ -1,11 +1,21 @@
 import React from "react";
+import Pokemon from "./Pokemon"
 
+const Pokedex = (props) => {
+  const { pokemons } = props;
+  return (
+    <div>
+      <div className="header">
+        <h1>Pokedex</h1>
+        <div>Pagination</div>
+      </div>
+      <div className="pokedex-pokemoncard">
+        {pokemons.map((pokemon, idx) => {
+          return (<Pokemon pokemon={pokemon} key={pokemon.name}/>);
+        })}
+      </div>
+    </div>
+  );
+};
 
-const Pokedex = () => {
-    return (
-        <h1>Hola soy el Pokedex</h1>
-        
-    )
-}
-
-export default Pokedex
+export default Pokedex;
