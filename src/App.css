@@ -24,15 +24,58 @@
 
 .screen {
   width: 790px;
-  height: 620px;
+  height: 630px;
   background: rgba(212, 238, 255, 0.9);
   border-left: 3px solid black;
   border-right: 3px solid black;
+  display: flex;
+  flex-direction: column;
 }
 
+.screen-pokedex {
+  padding: 10px;
+  height: 540px;
+  display: flex;
+  flex-direction: column;
+}
 .bottom-pokedex {
   width: 796px;
   height: 290px;
+}
+
+.header {
+  height: 90px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header h1 {
+}
+
+.screen-pokedex .pokedex-grid .pokemon-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.screen-pokedex .pokedex-grid .pokemon-card .card-bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+nav {
+  height: 90px;
+  display: flex;
+}
+
+.pagination {
+  display: flex;
+}
+
+.nav-btns {
+  display: flex;
 }
 
 .searchbar-container {
@@ -54,55 +97,62 @@
 .searchbar-container {
 }
 
-.header{
+
+.card-top {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  width: 100%;
   align-items: center;
 }
 
-.pokemon-card{
+.pokemon-img {
   display: flex;
-  flex-direction: column;
+  height:230px;
+  flex: 2;
+  justify-content: center;
+  align-items: center;
+  
+}
+.pokemon-img img {
+  height: 200px;
+}
+
+.card-body {
   flex: 3;
 }
-
-.pokemoncard-info{
+.pokemoncard-info {
   display: flex;
   align-items: center;
 }
 
-.pokemoncard-img{
+.pokemoncard-img {
   flex-grow: 2;
 }
 
-.pokemoncard-img img{
+.pokemoncard-img img {
   width: 100%;
 }
 
-.pokemoncard-data{
+.pokemoncard-data {
   flex-grow: 3;
 }
 
-.pokemoncard-data div{
+.pokemoncard-data div {
   border-bottom: 3px solid white;
   color: blue;
 }
 
-.pokemoncard-type{
+.pokemoncard-type {
   display: flex;
-  
 }
 
-.pokemoncard-typetext{
-  margin-right:10px;
+.pokemoncard-typetext {
+  margin-right: 10px;
   text-transform: capitalize;
   border: 1px solid white;
-  
 }
 
-.pokemon-descriptioncard{
+.pokemon-descriptioncard {
   display: flex;
   justify-content: space-between;
-
 }

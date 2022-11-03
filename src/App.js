@@ -1,40 +1,37 @@
 import React from "react";
-import logo from "./logo.svg";
 import pokedexttop from "./img/pokedex-01.png";
 import pokedextbottom from "./img/pokedex-02.png";
 import "./App.css";
-import Navbar from "./components/Navbar";
 import Searchbar from "./components/Searchbar";
 import Pokedex from "./components/Pokedex";
 import { getPokemonData, getPokemons, searchPokemon } from "./api";
 import { FavoriteProvider } from "./context/favoritesContext";
-import Pagination from "./components/Pagination";
 
 const { useState, useEffect } = React;
 
 const localStorageKey = "favorite_pokemon";
 
 function App() {
+  const [active, setActive] = useState("PokedexScreen");
   const [pokemons, setPokemons] = useState([]);
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [notFound, setNotFound] = useState(false);
-  const [searching, setSearching] = useState(false);
-  const [active, setActive] = useState("PokedexScreen");
+  const [searching,setSearching] = useState(false);
 
-  const fetchPokemons = async () => {
+  const fetchPokemons = async (value) => {
     try {
       setLoading(true);
-      const data = await getPokemons(1, 1 * page);
+      const data = await getPokemons(value, value * page);
       const promises = data.results.map(async (pokemon) => {
         return await getPokemonData(pokemon.url);
       });
       const results = await Promise.all(promises);
       setPokemons(results);
       setLoading(false);
-      setTotal(Math.ceil(data.count / 1));
+      setTotal(Math.ceil(data.count / value));
       setNotFound(false);
     } catch (error) {}
   };
@@ -51,8 +48,13 @@ function App() {
 
   useEffect(() => {
     if (!searching) {
-      fetchPokemons();
+      if (active === "NurseryScreen"){
+        fetchPokemons(6);
+      } else {
+      fetchPokemons(1);
+      }
     }
+    
   }, [page]);
 
   const updateFavoritePokemons = (name) => {
@@ -69,7 +71,7 @@ function App() {
 
   const onSearch = async (pokemon) => {
     if (!pokemon) {
-      return fetchPokemons();
+      return fetchPokemons(1);
     }
     setLoading(true);
     setNotFound(false);
@@ -88,15 +90,6 @@ function App() {
     setSearching(false);
   };
 
-  const lastPage = () => {
-    const nextPage = Math.max(page-1, 0);
-    setPage(nextPage)
-  }
-  
-  const nextPage = () => {
-    const nextPage = Math.min(page+1, total);
-    setPage(nextPage)
-  }
 
   return (
     <FavoriteProvider
@@ -115,7 +108,10 @@ function App() {
           <div className="screen">
             {active === "PokedexScreen" && (
               <div className="screen-pokedex">
-                <Searchbar onSearch={onSearch} />
+                <div className="header">
+                  <h1>Pokedex</h1>
+                  <Searchbar onSearch={onSearch} />
+                </div>
                 {notFound ? (
                   <div className="not-found-text">
                     No se encontro el Pokemon que buscabas 😭
@@ -133,15 +129,36 @@ function App() {
             )}
             {active === "NurseryScreen" && (
               <div className="screen-nursery">
+              <div className="header">
                 <h1>Nursery</h1>
+                <Searchbar onSearch={onSearch} />
               </div>
+              {notFound ? (
+                <div className="not-found-text">
+                  No se encontro el Pokemon que buscabas 😭
+                </div>
+              ) : (
+                <Pokedex
+                  loading={loading}
+                  pokemons={pokemons}
+                  page={page}
+                  setPage={setPage}
+                  total={total}
+                />
+              )}
+            </div>
             )}
             <nav>
-              <div>
-                <Pagination page={page + 1} totalPages={total} onLeftClick={lastPage} onRightClick={nextPage}/>
-                <button onClick={() => setActive("PokedexScreen")}>Pokedex</button>
-                <button onClick={() => setActive("NurseryScreen")}>Nursery</button>
-                <button onClick={() => setActive("PokedexScreen")}>Adventure</button>
+              <div className="nav-btns">
+                <button onClick={() => setActive("PokedexScreen")}>
+                  Pokedex
+                </button>
+                <button onClick={() => setActive("NurseryScreen")}>
+                  Nursery
+                </button>
+                <button onClick={() => setActive("PokedexScreen")}>
+                  Adventure
+                </button>
               </div>
               <div>&#10084;&#65039; {favorites.length}</div>
             </nav>
