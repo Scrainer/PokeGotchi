@@ -3,8 +3,9 @@ import pokedexttop from "./img/pokedex-01.png";
 import pokedextbottom from "./img/pokedex-02.png";
 import "./App.css";
 import Searchbar from "./components/Searchbar";
-import Pokedex from "./components/Pokedex";
 import { getPokemonData, getPokemons, searchPokemon } from "./api";
+import Pokedex from "./components/Pokedex";
+import Nursery from "./components/Nursery";
 import { FavoriteProvider } from "./context/favoritesContext";
 
 const { useState, useEffect } = React;
@@ -19,21 +20,21 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [notFound, setNotFound] = useState(false);
-  const [searching,setSearching] = useState(false);
+  const [searching, setSearching] = useState(false);
 
-  const fetchPokemons = async (value) => {
+  const fetchPokemons = async () => {
     try {
       setLoading(true);
-      const data = await getPokemons(value, value * page);
+      const data = await getPokemons(1, 1 * page);
       const promises = data.results.map(async (pokemon) => {
         return await getPokemonData(pokemon.url);
       });
       const results = await Promise.all(promises);
       setPokemons(results);
       setLoading(false);
-      setTotal(Math.ceil(data.count / value));
+      setTotal(Math.ceil(data.count / 11));
       setNotFound(false);
-    } catch (error) {}
+    } catch (err) {}
   };
 
   const loadFavoritePokemons = () => {
@@ -48,22 +49,19 @@ function App() {
 
   useEffect(() => {
     if (!searching) {
-      if (active === "NurseryScreen"){
-        fetchPokemons(6);
-      } else {
-      fetchPokemons(1);
-      }
+      fetchPokemons();
     }
-    
   }, [page]);
 
-  const updateFavoritePokemons = (name) => {
+  const updateFavoritePokemons = (pokemon) => {
     const updated = [...favorites];
-    const isFavorite = favorites.indexOf(name);
+    const isFavorite = updated.map(x => x.name).indexOf(pokemon.name);
     if (isFavorite >= 0) {
       updated.splice(isFavorite, 1);
     } else {
-      updated.push(name);
+      console.log(pokemon)
+      pokemon.happyness=Math.floor(Math.random() * 5);
+      updated.push(pokemon);
     }
     setFavorites(updated);
     window.localStorage.setItem(localStorageKey, JSON.stringify(updated));
@@ -71,7 +69,7 @@ function App() {
 
   const onSearch = async (pokemon) => {
     if (!pokemon) {
-      return fetchPokemons(1);
+      return fetchPokemons();
     }
     setLoading(true);
     setNotFound(false);
@@ -89,7 +87,6 @@ function App() {
     setLoading(false);
     setSearching(false);
   };
-
 
   return (
     <FavoriteProvider
@@ -111,6 +108,7 @@ function App() {
                 <div className="header">
                   <h1>Pokedex</h1>
                   <Searchbar onSearch={onSearch} />
+                  <div>&#10084;&#65039; {favorites.length}</div>
                 </div>
                 {notFound ? (
                   <div className="not-found-text">
@@ -129,24 +127,17 @@ function App() {
             )}
             {active === "NurseryScreen" && (
               <div className="screen-nursery">
-              <div className="header">
-                <h1>Nursery</h1>
-                <Searchbar onSearch={onSearch} />
-              </div>
-              {notFound ? (
-                <div className="not-found-text">
-                  No se encontro el Pokemon que buscabas 😭
+                <div className="header">
+                  <h1>Nursery</h1>
+                  <div>&#10084;&#65039; {favorites.length}</div>
                 </div>
-              ) : (
-                <Pokedex
-                  loading={loading}
-                  pokemons={pokemons}
-                  page={page}
-                  setPage={setPage}
-                  total={total}
-                />
-              )}
-            </div>
+                <Nursery
+
+                    pokemons={favorites}
+                  
+                  />
+
+              </div>
             )}
             <nav>
               <div className="nav-btns">
@@ -160,7 +151,6 @@ function App() {
                   Adventure
                 </button>
               </div>
-              <div>&#10084;&#65039; {favorites.length}</div>
             </nav>
           </div>
 
