@@ -1,29 +1,49 @@
 import React from "react";
+import FavoriteContext from "../context/favoritesContext";
+
+const {useContext} = React;
 
 const Pokemon = (props) => {
   const { pokemon } = props;
+  const { favoritePokemons, updateFavoritePokemons } = useContext(FavoriteContext);
+  const redHeart = "❤️";
+  const blackHeart = "🖤";
+  const heart = favoritePokemons.includes(pokemon.name) ? redHeart : blackHeart;
+
+  const clickHeart = (e) => {
+    e.preventDefault();
+    updateFavoritePokemons(pokemon.name);
+  }
+
   return (
     <div className="pokemon-card">
-      <div className="pokemoncard-info">
-        <div className="pokemoncard-img">
-          <img src={pokemon.sprites.front_default} alt={pokemon.name} />
+      <div className="pokemon-img">
+        <img
+          src={
+            pokemon.sprites.versions["generation-v"]["black-white"].animated
+              .front_default
+          }
+        />
+      </div>
+      <div className="card-body">
+        <div className="card-top">
+          <h3>{pokemon.name}</h3>
+          <div>#{pokemon.id}</div>
         </div>
-        <div className="pokemoncard-data">
-          <div>
-            <h2>No.{pokemon.id} {pokemon.name}</h2>
-          </div>
-          <div className="pokemoncard-type">
+        <div className="card-bottom">
+          <div className="pokemon-type">
             {pokemon.types.map((type, idx) => {
-              return <h2 className="pokemoncard-typetext" key={idx}>{type.type.name}</h2>;
+              return (
+                <div key={idx} className="pokemon-type-text">
+                  {type.type.name}
+                </div>
+              );
             })}
           </div>
-          <div><h2>Height:  {pokemon.height} dm.</h2></div>
-          <div><h2>Weight:  {pokemon.weight} hg.</h2></div>
+          <button onClick={clickHeart}>
+            <div className="pokemon-favorite">{heart}</div>
+          </button>
         </div>
-      </div>
-      <div className="pokemon-descriptioncard">
-        <div>Descripcion del pokemon</div>
-        <div>⚫</div>
       </div>
     </div>
   );
