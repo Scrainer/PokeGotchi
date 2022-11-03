@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import pokedexttop from './img/pokedex-01.png'
 import pokedextbottom from './img/pokedex-02.png'
 import './App.css';
+import Pokedex from './components/Pokedex';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
@@ -11,7 +13,10 @@ function App() {
         <div className="top-pokedex">
           <img src={pokedexttop}/>
         </div>
-        <div className="screen-pokedex"></div>
+        <div className="screen-pokedex">
+          <Pokedex/>
+          <Navbar/>
+        </div>
         <div className="bottom-pokedex">
           <img src={pokedextbottom}/>
         </div>
