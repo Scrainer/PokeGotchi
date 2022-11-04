@@ -3,13 +3,7 @@ import pokedexttop from "./img/pokedex-01.png";
 import pokedextbottom from "./img/pokedex-02.png";
 import "./App.css";
 import Searchbar from "./components/Searchbar";
-import {
-  getPokemonData,
-  getPokemons,
-  searchPokemon,
-  getSpeciesData,
-  getSpecies,
-} from "./api";
+import { getPokemonData, getPokemons, searchPokemon } from "./api";
 import Pokedex from "./components/Pokedex";
 import Nursery from "./components/Nursery";
 import { FavoriteProvider } from "./context/favoritesContext";
@@ -19,6 +13,110 @@ const { useState, useEffect } = React;
 const localStorageKey = "favorite_pokemon";
 
 function App() {
+  const nombresLegendarios = [
+    "articuno",
+    "zapdos",
+    "moltres",
+    "mewtwo",
+    "raikou",
+    "entei",
+    "suicune",
+    "lugia",
+    "ho-oh",
+    "regirock",
+    "regice",
+    "registeel",
+    "latias",
+    "latios",
+    "kyogre",
+    "groudon",
+    "rayquaza",
+    "uxie",
+    "mesprit",
+    "azelf",
+    "dialga",
+    "palkia",
+    "heatran",
+    "regigigas",
+    "giratina-altered",
+    "cresselia",
+    "cobalion",
+    "terrakion",
+    "virizion",
+    "tornadus-incarnate",
+    "thundurus-incarnate",
+    "reshiram",
+    "zekrom",
+    "landorus-incarnate",
+    "kyurem",
+    "xerneas",
+    "yveltal",
+    "zygarde-50",
+    "silvally",
+    "tapu-koko",
+    "tapu-lele",
+    "tapu-bulu",
+    "tapu-fini",
+    "cosmog",
+    "cosmoem",
+    "solgaleo",
+    "lunala",
+    "necrozma",
+    "zacian",
+    "zamazenta",
+    "eternatus",
+    "kubfu",
+    "urshifu-single-strike",
+    "regieleki",
+    "regidrago",
+    "glastrier",
+    "spectrier",
+    "calyrex",
+    "enamorus-incarnate",
+    "giratina-origin",
+    "tornadus-therian",
+    "thundurus-therian",
+    "landorus-therian",
+    "kyurem-black",
+    "kyurem-white",
+    "mewtwo-mega-x",
+    "mewtwo-mega-y",
+    "latias-mega",
+    "latios-mega",
+    "kyogre-primal",
+    "groudon-primal",
+    "rayquaza-mega",
+    "zygarde-10-power-construct",
+    "zygarde-50-power-construct",
+    "zygarde-complete",
+    "necrozma-dusk",
+    "necrozma-dawn",
+    "necrozma-ultra",
+    "articuno-galar",
+    "zapdos-galar",
+    "moltres-galar",
+    "zygarde-10",
+    "zacian-crowned",
+    "zamazenta-crowned",
+    "eternatus-eternamax",
+    "urshifu-rapid-strike",
+    "calyrex-ice",
+    "calyrex-shadow",
+    "urshifu-single-strike-gmax",
+    "urshifu-rapid-strike-gmax",
+    "dialga-origin",
+    "palkia-origin",
+    "enamorus-therian",
+  ];
+  const idxLegendarios = [
+    144, 145, 146, 150, 243, 244, 245, 249, 250, 377, 378, 379, 380, 381, 382,
+    383, 384, 480, 481, 482, 483, 484, 485, 486, 487, 488, 638, 639, 640, 641,
+    642, 643, 644, 645, 646, 716, 717, 718, 773, 785, 786, 787, 788, 789, 790,
+    791, 792, 800, 888, 889, 890, 891, 892, 894, 895, 896, 897, 898, 905, 10007,
+    10019, 10020, 10021, 10022, 10023, 10043, 10044, 10062, 10063, 10077, 10078,
+    10079, 10118, 10119, 10120, 10155, 10156, 10157, 10169, 10170, 10171, 10181,
+    10188, 10189, 10190, 10191, 10193, 10194, 10226, 10227, 10245, 10246, 10249,
+  ];
   const [active, setActive] = useState("PokedexScreen");
   const [pokemons, setPokemons] = useState([]);
   const [page, setPage] = useState(0);
@@ -27,9 +125,6 @@ function App() {
   const [favorites, setFavorites] = useState([]);
   const [notFound, setNotFound] = useState(false);
   const [searching, setSearching] = useState(false);
-  const [legendaries, setLegendaries] = useState([]);
-  const [indexes, setIndexes] = useState([]);
-  const [species, setSpecies] = useState([]);
 
   const fetchPokemons = async () => {
     try {
@@ -52,49 +147,9 @@ function App() {
     setFavorites(pokemons);
   };
 
-  const loadLegendaries = async () => {
-    const data = await getSpecies(1000, 0);
-    const promises = data.results.map(async (pokemon) => {
-      return await getSpeciesData(pokemon.url);
-    });
-    const results = await Promise.all(promises);
-    setSpecies(results);
-  };
-
-  const loadPosiciones = () => {
-    const legends = Array.from(species).filter((x) => x.is_legendary === true);
-    const posiciones = Array.from(species)
-      .map((element, index) => {
-        if (element.is_legendary === true) {
-          return index;
-        }
-      })
-      .filter((element) => element >= 0);
-    setIndexes((indexes) => posiciones);
-    setLegendaries((legendaries) => legends);
-  };
-
   useEffect(() => {
     loadFavoritePokemons();
-    loadLegendaries();
-    loadPosiciones();
   }, []);
-
-  useEffect(() => {
-    const legends = Array.from(species).filter((x) => x.is_legendary === true);
-
-    const posiciones = Array.from(species)
-      .map((element, index) => {
-        if (element.is_legendary === true) {
-          return index;
-        }
-      })
-      .filter((element) => element >= 0);
-
-    console.log(indexes);
-    setIndexes((indexes) => posiciones);
-    setLegendaries((legendaries) => legends);
-  }, [loading]);
 
   useEffect(() => {
     if (!searching) {
@@ -125,12 +180,10 @@ function App() {
     if (!pokemon) {
       return fetchPokemons();
     }
-    console.log(legendaries);
     setLoading(true);
     setNotFound(false);
     setSearching(true);
-    console.log(legendaries);
-    const result = await searchPokemon(pokemon, legendaries);
+    const result = await searchPokemon(pokemon,nombresLegendarios);
     if (!result) {
       setNotFound(true);
       setLoading(false);
@@ -145,6 +198,7 @@ function App() {
   };
 
   return (
+    
     <FavoriteProvider
       value={{
         favoritePokemons: favorites,
@@ -177,8 +231,8 @@ function App() {
                     page={page}
                     setPage={setPage}
                     total={total}
-                    legendaries={legendaries}
-                    indexes={indexes}
+                    legendaries={nombresLegendarios}
+                    indexes={idxLegendarios}
                   />
                 )}
               </div>
