@@ -53,7 +53,7 @@ const Adventure = (props) => {
 
 
   return (
-    <div>
+    <div className="prompt">
       <div>Are you ready for an Adventure?</div>
       <div>
         <p>
@@ -68,7 +68,7 @@ const Adventure = (props) => {
           onClick={checkTeam() ? () => setActive("Ready") : () => setActive("NotReady")
           }
         >
-          Catch'em All!
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg" alt="pokeball"/>
         </button>
       </div>
 

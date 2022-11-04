@@ -23,14 +23,6 @@ const Pokedex = (props) => {
 
   return (
     <div>
-      <div className="header">
-        <Pagination
-          page={page + 1}
-          totalPages={total}
-          onLeftClick={lastPage}
-          onRightClick={nextPage}
-        />
-      </div>
       {loading ? (
         <div>Cargando pokemones...</div>
       ) : (
@@ -40,6 +32,14 @@ const Pokedex = (props) => {
           })}
         </div>
       )}
+      <div className="pagination-footer">
+        <Pagination
+          page={page + 1}
+          totalPages={total}
+          onLeftClick={lastPage}
+          onRightClick={nextPage}
+        />
+      </div>
     </div>
   );
 };

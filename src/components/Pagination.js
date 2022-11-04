@@ -11,9 +11,6 @@ const Pagination = (props) => {
           <LeftArrow />
         </div>
       </button>
-      <div>
-        {page} de {totalPages}
-      </div>
       <button className="pagination-btn" onClick={onRightClick}>
         <div className="icon">
           <RightArrow />

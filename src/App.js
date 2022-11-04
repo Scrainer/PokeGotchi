@@ -216,9 +216,8 @@ function App() {
             {active === "PokedexScreen" && (
               <div className="screen-pokedex">
                 <div className="header">
-                  <h1>Pokedex</h1>
+                  <h1>Pokédex</h1>
                   <Searchbar onSearch={onSearch} />
-                  <div>&#10084;&#65039; {favorites.length}</div>
                 </div>
                 {notFound ? (
                   <div className="not-found-text">
@@ -241,7 +240,6 @@ function App() {
               <div className="screen-nursery">
                 <div className="header">
                   <h1>Nursery</h1>
-                  <div>&#10084;&#65039; {favorites.length}</div>
                 </div>
                 <Nursery pokemons={favorites} />
               </div>
@@ -250,7 +248,6 @@ function App() {
               <div className="screen-adventure">
                 <div className="header">
                   <h1>Adventure</h1>
-                  <div>&#10084;&#65039; {favorites.length}</div>
                 </div>
                 <Adventure legendaries={nombresLegendarios} />
               </div>

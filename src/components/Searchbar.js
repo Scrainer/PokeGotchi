@@ -19,11 +19,16 @@ const Searchbar = (props) => {
 
   return (
     <div className="searchbar-container">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <div className="searchbar">
-        <input placeholder="Buscar pokemon..." onChange={onChange}></input>
+        <input onChange={onChange}></input>
       </div>
       <div className="searchbar-btn">
-        <button onClick={onClick}>Buscar</button>
+        <button onClick={onClick}>
+        <span class="material-symbols-outlined">
+search
+</span>
+        </button>
       </div>      
     </div>
   );
