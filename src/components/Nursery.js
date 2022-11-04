@@ -1,7 +1,6 @@
 import React from "react";
 import Pagination from "./Pagination";
 import Tamed from "./Tamed";
-import { ScrollView, SafeAreaView } from 'react-native';
 const { useState, useEffect } = React;
 
 const Nursery = (props) => {
