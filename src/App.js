@@ -7,6 +7,7 @@ import { getPokemonData, getPokemons, searchPokemon } from "./api";
 import Pokedex from "./components/Pokedex";
 import Nursery from "./components/Nursery";
 import { FavoriteProvider } from "./context/favoritesContext";
+import Adventure from "./components/Adventure";
 
 const { useState, useEffect } = React;
 
@@ -198,7 +199,6 @@ function App() {
   };
 
   return (
-    
     <FavoriteProvider
       value={{
         favoritePokemons: favorites,
@@ -246,6 +246,15 @@ function App() {
                 <Nursery pokemons={favorites} />
               </div>
             )}
+            {active === "AdventureScreen" && (
+              <div className="screen-adventure">
+                <div className="header">
+                  <h1>Adventure</h1>
+                  <div>&#10084;&#65039; {favorites.length}</div>
+                </div>
+                <Adventure legendaries={nombresLegendarios} />
+              </div>
+            )}
             <nav>
               <div className="nav-btns">
                 <button onClick={() => setActive("PokedexScreen")}>
@@ -254,7 +263,7 @@ function App() {
                 <button onClick={() => setActive("NurseryScreen")}>
                   Nursery
                 </button>
-                <button onClick={() => setActive("PokedexScreen")}>
+                <button onClick={() => setActive("AdventureScreen")}>
                   Adventure
                 </button>
               </div>

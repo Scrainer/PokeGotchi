@@ -28,12 +28,20 @@ const Adventure = (props) => {
   };
 
   const captureLegendary = async () => {
-    const randomElement = legendaries.map((x) => x.name)[
-      Math.floor(Math.random() * legendaries.length)
-    ];
+    const randomElement = legendaries[Math.floor(Math.random() * legendaries.length)];
+    console.log(favoritePokemons.map((x) => x.name))
+    if ((favoritePokemons.map((x) => x.name)).includes(randomElement.name)){
+        console.log()
+    }
     console.log(randomElement);
     const result = await searchPokemon(randomElement, legendaries, true);
-    return () => setPokemons(result);
+    updateFavoritePokemons(result,false);
+    console.log(result);
+    
+  };
+
+  const capturePokemon = async () => {
+    updateFavoritePokemons(capture,false);
   };
 
   useEffect(() => {
@@ -67,15 +75,12 @@ const Adventure = (props) => {
       <div>
         {active === "Ready" && (
           <div>
-            <h2>You go on great adventure with your team.</h2>
-            {capture === "active"&& (
-                <h2>You've encountered and captured a {pokemons.name}.</h2>
-            )}
+            <h2>You go on great adventure with your team and encounter a Legendary Pokemon</h2>
           </div>
         )}
         {active === "NotReady" && (
           <div>
-            <h1>No estas listo</h1>
+            <h2>You go on a somewhat normal adventure, maybe you need to capture more Pokemons or spend more time with them</h2>
           </div>
         )}
       </div>

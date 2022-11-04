@@ -16,7 +16,6 @@ const Tamed = (props) => {
   return (
     
     <div className="pokemon-card">
-      <div>{console.log(favoritePokemons)}</div> 
       <div className="pokemon-img">
         <img src={pokemon.sprites.front_default} />
       </div>

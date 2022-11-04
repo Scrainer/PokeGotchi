@@ -10,8 +10,6 @@ export const searchPokemon = async (pokemon, legendaries, ready=false) => {
       let url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data.species.name);
-      console.log(legendaries);
       const lista = legendaries.map((x) => x.name);
       if (legendaries.includes(data.species.name)) {
         data = null;

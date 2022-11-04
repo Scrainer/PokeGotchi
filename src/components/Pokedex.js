@@ -26,7 +26,7 @@ const Pokedex = (props) => {
       <div className="header">
         <Pagination
           page={page + 1}
-          totalPages={total-legendaries.length}
+          totalPages={total}
           onLeftClick={lastPage}
           onRightClick={nextPage}
         />
