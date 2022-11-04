@@ -3,7 +3,13 @@ import pokedexttop from "./img/pokedex-01.png";
 import pokedextbottom from "./img/pokedex-02.png";
 import "./App.css";
 import Searchbar from "./components/Searchbar";
-import { getPokemonData, getPokemons, searchPokemon } from "./api";
+import {
+  getPokemonData,
+  getPokemons,
+  searchPokemon,
+  getSpeciesData,
+  getSpecies,
+} from "./api";
 import Pokedex from "./components/Pokedex";
 import Nursery from "./components/Nursery";
 import { FavoriteProvider } from "./context/favoritesContext";
@@ -21,6 +27,9 @@ function App() {
   const [favorites, setFavorites] = useState([]);
   const [notFound, setNotFound] = useState(false);
   const [searching, setSearching] = useState(false);
+  const [legendaries, setLegendaries] = useState([]);
+  const [indexes, setIndexes] = useState([]);
+  const [species, setSpecies] = useState([]);
 
   const fetchPokemons = async () => {
     try {
@@ -43,9 +52,49 @@ function App() {
     setFavorites(pokemons);
   };
 
+  const loadLegendaries = async () => {
+    const data = await getSpecies(1000, 0);
+    const promises = data.results.map(async (pokemon) => {
+      return await getSpeciesData(pokemon.url);
+    });
+    const results = await Promise.all(promises);
+    setSpecies(results);
+  };
+
+  const loadPosiciones = () => {
+    const legends = Array.from(species).filter((x) => x.is_legendary === true);
+    const posiciones = Array.from(species)
+      .map((element, index) => {
+        if (element.is_legendary === true) {
+          return index;
+        }
+      })
+      .filter((element) => element >= 0);
+    setIndexes((indexes) => posiciones);
+    setLegendaries((legendaries) => legends);
+  };
+
   useEffect(() => {
     loadFavoritePokemons();
+    loadLegendaries();
+    loadPosiciones();
   }, []);
+
+  useEffect(() => {
+    const legends = Array.from(species).filter((x) => x.is_legendary === true);
+
+    const posiciones = Array.from(species)
+      .map((element, index) => {
+        if (element.is_legendary === true) {
+          return index;
+        }
+      })
+      .filter((element) => element >= 0);
+
+    console.log(indexes);
+    setIndexes((indexes) => posiciones);
+    setLegendaries((legendaries) => legends);
+  }, [loading]);
 
   useEffect(() => {
     if (!searching) {
@@ -65,7 +114,6 @@ function App() {
       }
     } else {
       pokemon.happiness += 1;
-      console.log(pokemon);
       updated.splice(isFavorite, 1, pokemon);
     }
 
@@ -77,10 +125,12 @@ function App() {
     if (!pokemon) {
       return fetchPokemons();
     }
+    console.log(legendaries);
     setLoading(true);
     setNotFound(false);
     setSearching(true);
-    const result = await searchPokemon(pokemon);
+    console.log(legendaries);
+    const result = await searchPokemon(pokemon, legendaries);
     if (!result) {
       setNotFound(true);
       setLoading(false);
@@ -95,7 +145,6 @@ function App() {
   };
 
   return (
-    
     <FavoriteProvider
       value={{
         favoritePokemons: favorites,
@@ -103,7 +152,6 @@ function App() {
       }}
     >
       <div className="App">
-        {console.log(pokemons)}
         <div className="left-container"></div>
         <div className="pokedex-container">
           <div className="top-pokedex">
@@ -129,6 +177,8 @@ function App() {
                     page={page}
                     setPage={setPage}
                     total={total}
+                    legendaries={legendaries}
+                    indexes={indexes}
                   />
                 )}
               </div>
