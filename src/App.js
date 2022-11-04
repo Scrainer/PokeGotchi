@@ -32,7 +32,7 @@ function App() {
       const results = await Promise.all(promises);
       setPokemons(results);
       setLoading(false);
-      setTotal(Math.ceil(data.count / 11));
+      setTotal(Math.ceil(data.count / 1));
       setNotFound(false);
     } catch (err) {}
   };
@@ -53,16 +53,22 @@ function App() {
     }
   }, [page]);
 
-  const updateFavoritePokemons = (pokemon) => {
+  const updateFavoritePokemons = (pokemon, isCandy) => {
     const updated = [...favorites];
-    const isFavorite = updated.map(x => x.name).indexOf(pokemon.name);
-    if (isFavorite >= 0) {
-      updated.splice(isFavorite, 1);
+    const isFavorite = updated.map((x) => x.name).indexOf(pokemon.name);
+    if (!isCandy) {
+      if (isFavorite >= 0) {
+        updated.splice(isFavorite, 1);
+      } else {
+        pokemon.happiness = Math.floor(Math.random() * 5);
+        updated.push(pokemon);
+      }
     } else {
-      console.log(pokemon)
-      pokemon.happyness=Math.floor(Math.random() * 5);
-      updated.push(pokemon);
+      pokemon.happiness += 1;
+      console.log(pokemon);
+      updated.splice(isFavorite, 1, pokemon);
     }
+
     setFavorites(updated);
     window.localStorage.setItem(localStorageKey, JSON.stringify(updated));
   };
@@ -89,6 +95,7 @@ function App() {
   };
 
   return (
+    
     <FavoriteProvider
       value={{
         favoritePokemons: favorites,
@@ -96,6 +103,7 @@ function App() {
       }}
     >
       <div className="App">
+        {console.log(pokemons)}
         <div className="left-container"></div>
         <div className="pokedex-container">
           <div className="top-pokedex">
@@ -131,12 +139,7 @@ function App() {
                   <h1>Nursery</h1>
                   <div>&#10084;&#65039; {favorites.length}</div>
                 </div>
-                <Nursery
-
-                    pokemons={favorites}
-                  
-                  />
-
+                <Nursery pokemons={favorites} />
               </div>
             )}
             <nav>

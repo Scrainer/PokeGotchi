@@ -13,7 +13,7 @@ const Pokemon = (props) => {
 
   const clickHeart = (e) => {
     e.preventDefault();
-    updateFavoritePokemons(pokemon);
+    updateFavoritePokemons(pokemon,false);
   };
 
   return (

@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import FavoriteContext from "../context/favoritesContext";
-
-const {useContext} = React;
 
 const Tamed = (props) => {
   const { pokemon } = props;
+  const { favoritePokemons, updateFavoritePokemons } = useContext(FavoriteContext);
 
+  const candy = "🍬";
+
+  const clickCandy = (e) => {
+    e.preventDefault();
+    updateFavoritePokemons(pokemon,true);
+  
+  };
 
   return (
+    
     <div className="pokemon-card">
+      <div>{console.log(favoritePokemons)}</div> 
       <div className="pokemon-img">
-        <img
-          src={
-            pokemon.sprites.front_default
-          }
-        />
+        <img src={pokemon.sprites.front_default} />
       </div>
       <div className="card-body">
         <div className="card-top">
@@ -22,7 +26,7 @@ const Tamed = (props) => {
           <div>#{pokemon.id}</div>
         </div>
         <div className="card-bottom">
-        <div>Happiness: {pokemon.happyness}</div>
+          <div>Happiness: {pokemon.happiness}</div>
           <div className="pokemon-type">
             {pokemon.types.map((type, idx) => {
               return (
@@ -32,6 +36,9 @@ const Tamed = (props) => {
               );
             })}
           </div>
+          <button onClick={clickCandy} className="pokemon-heart-btn">
+            <div className="pokemon-favorite">{candy}</div>
+          </button>
         </div>
       </div>
     </div>
